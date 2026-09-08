@@ -1,0 +1,18 @@
+<launch>
+  <arg name="gps_topic" default="/fix" />
+  <arg name="host" default="0.0.0.0" />
+  <arg name="port" default="8080" />
+  <arg name="tianditu_tk" default="f76254623806ec5c849ce69f586e7bce" />
+  <arg name="route_file" default="$(find demo)/routes/active_route.json" />
+
+  <node pkg="demo" type="tianditu_web.py" name="tianditu_web" output="screen">
+    <param name="gps_topic" value="$(arg gps_topic)" />
+    <param name="host" value="$(arg host)" />
+    <param name="port" value="$(arg port)" />
+    <param name="tianditu_tk" value="$(arg tianditu_tk)" />
+    <param name="route_file" value="$(arg route_file)" />
+    <param name="web_dir" value="$(find demo)/web" />
+    <param name="package_path" value="$(find demo)" />
+    <param name="track_limit" value="2000" />
+  </node>
+</launch>

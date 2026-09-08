@@ -1,0 +1,25 @@
+<launch>
+  <!-- GPS-only demo: start S -> Web point A -> spin 360 -> turn 180 -> return S -->
+  <arg name="gps_topic" default="/fix"/>
+  <arg name="cmd_topic" default="/gps_demo/cmd_vel"/>
+  <arg name="route_file" default="$(find demo)/routes/active_route.json"/>
+
+  <node pkg="demo" type="gps_roundtrip_demo.py" name="gps_roundtrip_demo" output="screen">
+    <param name="gps_topic" value="$(arg gps_topic)"/>
+    <param name="cmd_topic" value="$(arg cmd_topic)"/>
+    <param name="route_file" value="$(arg route_file)"/>
+    <param name="route_point_index" value="0"/>
+
+    <!-- Conservative demo speeds -->
+    <param name="cruise_speed" value="0.22"/>
+    <param name="bootstrap_speed" value="0.12"/>
+    <param name="max_angular_speed" value="0.45"/>
+    <param name="heading_kp" value="1.1"/>
+    <param name="arrival_radius" value="1.5"/>
+    <param name="home_radius" value="1.8"/>
+    <param name="course_min_move" value="0.60"/>
+    <param name="gps_timeout" value="2.5"/>
+    <param name="spin_speed" value="0.40"/>
+    <param name="max_demo_distance" value="40.0"/>
+  </node>
+</launch>

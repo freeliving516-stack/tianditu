@@ -1,0 +1,45 @@
+<launch>
+  <arg name="gps_topic" default="/fix" />
+  <arg name="route_file" default="$(find demo)/routes/active_route.json" />
+  <arg name="frame_id" default="gps_map" />
+  <arg name="start_web" default="true" />
+  <arg name="web_port" default="8080" />
+  <arg name="tianditu_tk" default="$(optenv TIANDITU_TK '')" />
+  <arg name="tf_parent" default="world" />
+
+  <node pkg="tf" type="static_transform_publisher" name="gps_map_tf" args="0 0 0 0 0 0 $(arg tf_parent) $(arg frame_id) 100" />
+
+  <node if="$(arg start_web)" pkg="demo" type="tianditu_web.py" name="tianditu_web" output="screen">
+    <param name="gps_topic" value="$(arg gps_topic)" />
+    <param name="host" value="0.0.0.0" />
+    <param name="port" value="$(arg web_port)" />
+    <param name="tianditu_tk" value="$(arg tianditu_tk)" />
+    <param name="route_file" value="$(arg route_file)" />
+    <param name="web_dir" value="$(find demo)/web" />
+    <param name="package_path" value="$(find demo)" />
+    <param name="track_limit" value="2000" />
+  </node>
+
+  <node pkg="demo" type="gps_to_local.py" name="gps_to_local" output="screen">
+    <param name="gps_topic" value="$(arg gps_topic)" />
+    <param name="route_file" value="$(arg route_file)" />
+    <param name="frame_id" value="$(arg frame_id)" />
+    <param name="altitude_mode" value="zero" />
+    <param name="min_track_distance" value="0.20" />
+  </node>
+
+  <node pkg="demo" type="route_player.py" name="route_player" output="screen">
+    <param name="route_file" value="$(arg route_file)" />
+    <param name="frame_id" value="$(arg frame_id)" />
+    <param name="altitude_mode" value="zero" />
+  </node>
+
+  <node pkg="demo" type="route_matcher.py" name="route_matcher" output="screen">
+    <param name="pose_topic" value="/gps_to_local/pose" />
+    <param name="route_topic" value="/route_player/path" />
+    <param name="frame_id" value="$(arg frame_id)" />
+    <param name="max_snap_distance" value="30.0" />
+    <param name="backward_window" value="10.0" />
+    <param name="forward_window" value="50.0" />
+  </node>
+</launch>
