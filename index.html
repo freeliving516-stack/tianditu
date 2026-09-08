@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Geo Navigation · 天地图</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div>
+        <h1>Geo Navigation</h1>
+        <div class="sub">GPS 实时位置 · 路线标点 · 天地图</div>
+      </div>
+      <div class="header-actions">
+        <div class="map-mode-tools" aria-label="地图类型与缩放">
+          <button id="normalMap" class="header-tool active">普通地图</button>
+          <button id="satelliteMap" class="header-tool">卫星图</button>
+          <span class="tool-divider"></span>
+          <button id="panMode" class="header-tool active" title="拖动地图，不新增标点">拖动地图</button>
+          <button id="editMode" class="header-tool" title="点击添加标点，可拖动已有标点">标注点</button>
+          <span class="tool-divider"></span>
+          <button id="zoomOut" class="header-tool square" title="缩小">−</button>
+          <span id="zoomLevel" class="zoom-level" title="Z20+ 为虚拟放大">Z12</span>
+          <button id="zoomIn" class="header-tool square" title="放大">＋</button>
+        </div>
+        <div class="status-row">
+          <span id="gpsStatus" class="pill bad">等待 /fix</span>
+          <span id="saveStatus" class="pill">未修改</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="map-wrap">
+        <div id="mapViewport" class="map-viewport"><div id="map"></div><div id="virtualMarkerLayer" class="virtual-marker-layer"></div></div>
+        <div id="mapError" class="map-error hidden"></div>
+      </section>
+
+      <aside>
+        <div class="card">
+          <h2>机器人</h2>
+          <div class="kv"><span>纬度</span><b id="lat">--</b></div>
+          <div class="kv"><span>经度</span><b id="lon">--</b></div>
+          <div class="kv"><span>海拔</span><b id="alt">--</b></div>
+          <button id="centerRobot">定位到机器人</button>
+          <button id="clearTrack" class="ghost">清空轨迹</button>
+        </div>
+
+        <div class="card route-card">
+          <div class="card-title-row">
+            <h2>路线标注点</h2>
+            <span id="pointCount" class="count-badge">0 点</span>
+          </div>
+          <label>名称<input id="routeName" value="route_01" /></label>
+          <label class="inline"><input id="loop" type="checkbox" /> 循环路线</label>
+          <div class="hint">默认是“拖动地图”模式，不会误加点；切换到“标注点”后，点击地图添加点并可拖动已有点。Z20~Z22 使用 Z19 瓦片继续放大，但大头针与编号保持固定尺寸。</div>
+          <div id="pointList" class="points"></div>
+          <div class="actions">
+            <button id="saveRoute">保存路线</button>
+            <button id="clearRoute" class="danger">清空</button>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
